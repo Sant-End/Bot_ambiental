@@ -1,0 +1,52 @@
+import discord
+import random
+
+# Reemplaza con tu token de bot
+TOKEN = 'Tu Token Aqui'
+
+# Lista de consejos sobre cómo cuidar el ambiente
+environmental_tips = [
+    "Apaga las luces cuando salgas de una habitación.",
+    "Recicla papel, plástico, vidrio y metales para reducir los residuos.",
+    "Usa una botella de agua reutilizable para evitar el plástico desechable.",
+    "Camina, usa la bicicleta o comparte el coche para reducir emisiones.",
+    "Planta un árbol y ayuda a combatir el cambio climático.",
+    "Reduce el consumo de agua cerrando el grifo cuando no lo necesites.",
+    "Compra productos locales y de temporada para reducir la huella de carbono.",
+    "Evita el uso de pajillas y utensilios de plástico desechables.",
+    "Reutiliza bolsas de tela en lugar de usar bolsas de plástico.",
+    "Apoya iniciativas de limpieza en tu comunidad."
+]
+
+# Configurar intents para manejar eventos
+intents = discord.Intents.default()
+intents.messages = True  # Asegúrate de habilitar permisos de mensajes
+
+# Crear la instancia del cliente
+client = discord.Client(intents=intents)
+
+@client.event
+async def on_ready():
+    print(f'El bot está conectado como {client.user}')
+
+@client.event
+async def on_message(message):
+    # Evitar que el bot responda a sus propios mensajes
+    if message.author == client.user:
+        return
+
+    # Comando para obtener un consejo
+    if message.content.lower() == '!tip':
+        tip = random.choice(environmental_tips)
+        await message.channel.send(tip)
+
+    # Mensaje de ayuda para comandos
+    elif message.content.lower() == '!help':
+        await message.channel.send(
+            "Comandos disponibles:\n" 
+            "`!tip` - Recibe un consejo para cuidar el ambiente.\n"
+            "`!help` - Muestra esta lista de comandos."
+        )
+
+# Iniciar el bot
+client.run(TOKEN)
